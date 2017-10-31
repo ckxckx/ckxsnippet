@@ -9,7 +9,7 @@
 #include<signal.h>
 #include<errno.h>
 // #define MYPORT 8888
-
+#define MYKEY "ckx"
 
 //
 void sig_chld(int signo)
@@ -31,7 +31,7 @@ void processme(int s){
 	char inputme[100];
 	char echome[200];
 	//char key[]="29585c700c8d0be16c6b0a24d8c9d0bc";
-	char key[]="ckx";
+	char key[]=MYKEY;
 	memset(inputme,0,100);
 	memset(echome,0,200);
 	read(s,inputme,sizeof(inputme)-1);
