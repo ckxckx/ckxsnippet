@@ -7,7 +7,7 @@
 实现了多进程的socket server,  基本的IO响应函数
 
 ### [socket_server_level2]
-remote bind shell, 调用execve
+remote bind shell, 利用signal处理僵尸子进程问题，实现了基本的后门
 
 
 ### [socket_server_level3]

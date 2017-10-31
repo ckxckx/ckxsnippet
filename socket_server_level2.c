@@ -8,16 +8,22 @@
 #include<string.h>
 #include<signal.h>
 #include<errno.h>
-#define MYPORT 8888
+// #define MYPORT 8888
+
+
+//
 void sig_chld(int signo)
 {
 	int pid;
 	int stat;
 	while((pid = waitpid(-1, &stat, WNOHANG)) > 0)
 	{
-	printf("child %d terminated\n", pid);
-	}   
-}	
+	//printf("child %d terminated\n", pid);
+	}
+}
+
+
+//子进程处理函数，输入clientfd
 void processme(int s){
 
 	char buffer[100]="Plz input your name:\n";
@@ -42,6 +48,8 @@ void processme(int s){
 	}
 	write(s,"GoodBye~~~",9);
 }
+
+
 
 void USAGE()
 {
@@ -82,6 +90,9 @@ int main(int argc, char** argv)
 
 	int lenofclient=sizeof(struct sockaddr);
 
+
+
+//开始循环等待接入，每一次接入fork新的子进程
 	for(;;){
 
 	clientfd=accept(serverfd,(struct sockaddr *)&clientaddr,&lenofclient);
@@ -92,13 +103,15 @@ int main(int argc, char** argv)
 	}
 
 
-	//set signal
-	
-	if(signal(SIGCHLD, sig_chld) == SIG_ERR)  
-    	{  
-        	fprintf(stderr, "signal error : %s\n", strerror(errno));  
-        return 1;
-	}  
+	//set signal, handle zombine child process
+
+if(signal(SIGCHLD, sig_chld) == SIG_ERR)
+{
+	fprintf(stderr, "signal error : %s\n", strerror(errno));
+	return 1;
+}
+
+
 
 	int pid;
 	pid=fork();
