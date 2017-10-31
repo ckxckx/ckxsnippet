@@ -1,18 +1,31 @@
 #include<stdio.h>
+#include<sys/wait.h>
+#include<sys/types.h>
 #include<unistd.h>
 #include<sys/socket.h>
 #include<arpa/inet.h>
 #include<stdlib.h>
 #include<string.h>
+#include<signal.h>
+#include<errno.h>
 #define MYPORT 8888
-
+void sig_chld(int signo)
+{
+	int pid;
+	int stat;
+	while((pid = waitpid(-1, &stat, WNOHANG)) > 0)
+	{
+	printf("child %d terminated\n", pid);
+	}   
+}	
 void processme(int s){
 
 	char buffer[100]="Plz input your name:\n";
 	write(s,buffer,strlen(buffer)+1);
 	char inputme[100];
 	char echome[200];
-	char key[]="29585c700c8d0be16c6b0a24d8c9d0bc";
+	//char key[]="29585c700c8d0be16c6b0a24d8c9d0bc";
+	char key[]="ckx";
 	memset(inputme,0,100);
 	memset(echome,0,200);
 	read(s,inputme,sizeof(inputme)-1);
@@ -78,6 +91,14 @@ int main(int argc, char** argv)
 	;
 	}
 
+
+	//set signal
+	
+	if(signal(SIGCHLD, sig_chld) == SIG_ERR)  
+    	{  
+        	fprintf(stderr, "signal error : %s\n", strerror(errno));  
+        return 1;
+	}  
 
 	int pid;
 	pid=fork();
